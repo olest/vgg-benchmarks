@@ -1,5 +1,6 @@
 import argparse
 import os.path
+import sys
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--backend")
@@ -12,10 +13,10 @@ with open(os.path.expanduser("~/.keras/keras.json"), "w") as fh:
         fh.write('{ "image_dim_ordering": "tf", "epsilon": 1e-07, "floatx": "float32", "backend": "tensorflow" }')
     else:
         print "Backend must be theano or tensorflow"
+	sys.exit()
 
 import numpy as np
 import time
-import sys
 from keras.optimizers import SGD
 
 from keras.applications.vgg16 import VGG16
