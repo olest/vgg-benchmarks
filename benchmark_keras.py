@@ -18,15 +18,13 @@ import time
 import sys
 from keras.optimizers import SGD
 
-# vgg16.py from https://github.com/fchollet/deep-learning-models
-sys.path.append("deep-learning-models")
-import vgg16
+from keras.applications.vgg16 import VGG16
 
 width = 224
 height = 224
 batch_size = 16
 
-model = vgg16.VGG16(include_top=True, weights=None)
+model = VGG16(include_top=True, weights=None)
 sgd = SGD(lr=0.001, decay=1e-6, momentum=0.9, nesterov=True)
 model.compile(loss='categorical_crossentropy', optimizer=sgd) # loss='hinge'
 
