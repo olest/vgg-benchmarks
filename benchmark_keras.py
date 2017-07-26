@@ -18,7 +18,6 @@ with open(os.path.expanduser("~/.keras/keras.json"), "w") as fh:
 import numpy as np
 import time
 from keras.optimizers import SGD
-
 from keras.applications.vgg16 import VGG16
 
 width = 224
@@ -35,6 +34,8 @@ elif args.backend == "tensorflow":
     x = np.zeros((batch_size, width, height, 3), dtype=np.float32)
 else:
     print "Backend must be theano or tensorflow"
+    sys.exit()
+
 y = np.zeros((batch_size, 1000), dtype=np.float32)
 
 # warmup
@@ -42,12 +43,19 @@ model.train_on_batch(x, y)
 
 t0 = time.time()
 n = 0
-while n < 100:
-    tstart = time.time()
-    model.train_on_batch(x, y)
-    tend = time.time()
-    print "Iteration: %d train on batch time: %7.3f ms." %( n, (tend - tstart)*1000 )
-    n += 1
+import time
+outfile="keras_benchmark_" + time.strftime('%d_%m_%H_%M_%S') + ".csv"
+import socket
+host = socket.gethostname()
+with open(outfile,'w') as out:
+    print >>out,"#",host
+    while n < 100:
+        tstart = time.time()
+        model.train_on_batch(x, y)
+        tend = time.time()
+        print "Iteration: %d train on batch time: %7.3f ms." %( n, (tend - tstart)*1000 )
+        print >>out,"%d, %7.3f" %( n, (tend - tstart)*1000 )
+        n += 1
 t1 = time.time()
 
 print "Batch size: %d" %(batch_size)
